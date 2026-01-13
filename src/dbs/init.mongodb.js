@@ -1,8 +1,13 @@
 const mongoose = require("mongoose");
 const { countConnections } = require("../helpers/check.connect");
+const {
+  db: { host, port, name },
+} = require("../configs/init.config");
 const MAX_POOL_SIZE = 10;
 
-const connectString = "mongodb://localhost:27017/myshop";
+const connectString = `mongodb://${host}:${port}/${name}`;
+
+console.log("connectString:", connectString);
 
 class Database {
   constructor() {
