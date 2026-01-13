@@ -11,14 +11,15 @@ app.use(morgan("dev"));
 app.use(helmet());
 app.use(compression());
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Initialize database connection
 require("./src/dbs/init.mongodb");
 checkOverload();
 
 // Route handlers would go here
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-});
+app.use("/", require("./src/routes"));
 
 // Error handling middleware would go here
 
