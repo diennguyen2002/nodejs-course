@@ -1,9 +1,9 @@
-POST http://localhost:3000/register
+POST http://localhost:3000/api/v1/shop/register
 Content-Type: application/json
 
 {
-    "name": "Shop A5",
-    "email": "shop6@test.com",
+    "name": "Shop A9",
+    "email": "shop9@test.com",
     "mobile": "2123456789",
     "password": "password123"
 }
