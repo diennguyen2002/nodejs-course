@@ -2,8 +2,7 @@ POST http://localhost:3000/api/v1/shop/register
 Content-Type: application/json
 
 {
-    "name": "Shop A9",
-    "email": "shop9@test.com",
-    "mobile": "2123456789",
+    "name": "Shop 10",
+    "email": "shop10@test.com",
     "password": "password123"
 }

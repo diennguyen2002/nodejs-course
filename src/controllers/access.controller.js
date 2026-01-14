@@ -1,4 +1,4 @@
-const shopService = require("../services/shop.service");
+const shopService = require("../services/access.service");
 
 class ShopController {
   // Define methods for shop controller here
