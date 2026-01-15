@@ -1,5 +1,6 @@
 POST http://localhost:3000/api/v1/shop/register
 Content-Type: application/json
+x-api-key: 'xxxxxx'
 
 {
     "name": "Shop 10",

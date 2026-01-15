@@ -1,15 +1,10 @@
 const shopService = require("../services/access.service");
 
-class ShopController {
+class AccessController {
   // Define methods for shop controller here
   register = async (req, res) => {
-    try {
-      console.log("P::register::body request:", req.body);
-      res.status(200).json(await shopService.register(req.body));
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
+    res.status(200).json(await shopService.register(req.body));
   };
 }
 
-module.exports = new ShopController();
+module.exports = new AccessController();
