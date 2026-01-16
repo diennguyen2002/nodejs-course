@@ -3,7 +3,18 @@ Content-Type: application/json
 x-api-key: 'xxxxxx'
 
 {
-    "name": "Shop 16",
-    "email": "shop16@test.com",
+    "name": "Shop 1",
+    "email": "shop9@test.com",
+    "password": "password123"
+}
+
+###
+
+POST http://localhost:3000/api/v1/shop/login
+Content-Type: application/json
+x-api-key: 'xxxxxx'
+
+{
+    "email": "shop9@test.com",
     "password": "password123"
 }

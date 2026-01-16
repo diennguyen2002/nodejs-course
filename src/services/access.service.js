@@ -10,6 +10,39 @@ const {
 } = require("../core/error.response");
 
 class ShopService {
+  static login = async ({ email, password, refreshToken = null }) => {
+    const existedShop = await shopModel.findOne({ email }).lean();
+    if (!existedShop) {
+      throw new BadRequestError("Shop does not exist");
+    }
+
+    const match = await bcrypt.compare(password, existedShop.password);
+    if (!match) {
+      throw new BadRequestError("Bad request");
+    }
+
+    const privateKey = crypto.randomBytes(64).toString("hex");
+    const publicKey = crypto.randomBytes(64).toString("hex");
+
+    const tokenPair = await createTokenPair(
+      { shopId: existedShop._id, email },
+      publicKey,
+      privateKey
+    );
+
+    await KeyTokenService.createKeyToken({
+      shopId: existedShop._id,
+      publicKey,
+      privateKey,
+      refreshToken: tokenPair.refreshToken,
+    });
+
+    return {
+      shop: getInfoData(existedShop, ["_id", "name", "email"]),
+      tokens: tokenPair,
+    };
+  };
+
   // Service methods will be implemented here
   static register = async ({ name, email, password }) => {
     // Registration logic
@@ -27,43 +60,32 @@ class ShopService {
     });
 
     if (newShop) {
-      const { privateKey, publicKey } = await crypto.generateKeyPairSync(
-        "rsa",
-        {
-          modulusLength: 4096,
-          publicKeyEncoding: {
-            type: "spki",
-            format: "pem",
-          },
-          privateKeyEncoding: {
-            type: "pkcs8",
-            format: "pem",
-          },
-        }
-      );
+      const privateKey = crypto.randomBytes(64).toString("hex");
+      const publicKey = crypto.randomBytes(64).toString("hex");
 
       console.log("Generated Public Key:", publicKey);
       console.log("Generated Private Key:", privateKey);
+
+      const tokenPair = await createTokenPair(
+        { shopId: newShop._id, email },
+        publicKey,
+        privateKey
+      );
+
+      console.log("Token Pair:", tokenPair);
 
       const publicKeyString = await KeyTokenService.createKeyToken({
         shopId: newShop._id,
         publicKey,
         privateKey,
+        refreshToken: tokenPair.refreshToken,
       });
+
+      console.log("Stored Public Key String:", publicKeyString);
 
       if (!publicKeyString) {
         throw new InternalServerError("Error creating key token");
       }
-
-      console.log("Public Key String:", publicKeyString);
-
-      const tokenPair = await createTokenPair(
-        { shopId: newShop._id, email },
-        publicKeyString,
-        privateKey
-      );
-
-      console.log("Token Pair:", tokenPair);
 
       return {
         shop: getInfoData(newShop, ["_id", "name", "email"]),

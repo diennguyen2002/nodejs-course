@@ -1,5 +1,8 @@
 const { some } = require("lodash");
-const { CreatedResponse } = require("../core/success.response");
+const {
+  CreatedResponse,
+  SuccessResponse,
+} = require("../core/success.response");
 const shopService = require("../services/access.service");
 
 class AccessController {
@@ -9,6 +12,13 @@ class AccessController {
       message: "Shop registered successfully",
       metadata: await shopService.register(req.body),
       options: { someOption: true },
+    }).send(res);
+  };
+
+  login = async (req, res) => {
+    new SuccessResponse({
+      message: "Shop logged in successfully",
+      metadata: await shopService.login(req.body),
     }).send(res);
   };
 }

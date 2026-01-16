@@ -19,7 +19,7 @@ var shopSchema = new mongoose.Schema(
     },
     roles: {
       type: [String],
-      default: ["SHOP"],
+      default: ["0000"],
     },
   },
   {

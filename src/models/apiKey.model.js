@@ -16,6 +16,7 @@ var apiKeySchema = new Schema(
       type: [String],
       required: true,
       enum: ["0000", "1111", "2222", "3333"],
+      default: ["0000"],
     },
   },
   {
