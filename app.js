@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 
 app.use((error, req, res, next) => {
   res.status(error.statusCode || 500);
-  console.error("Looi:", error);
+  //console.error("Looi:", error);
   return res.json({
     status: "error",
     code: error.statusCode || 500,

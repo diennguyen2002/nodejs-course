@@ -56,8 +56,6 @@ class ShopService {
       }
 
       console.log("Public Key String:", publicKeyString);
-      //const publicKeyObject = crypto.createPublicKey(publicKeyString);
-      //console.log("Public Key Object:", publicKeyObject);
 
       const tokenPair = await createTokenPair(
         { shopId: newShop._id, email },
@@ -68,11 +66,8 @@ class ShopService {
       console.log("Token Pair:", tokenPair);
 
       return {
-        status: "success",
-        metadata: {
-          shop: getInfoData(newShop, ["_id", "name", "email"]),
-          tokens: tokenPair,
-        },
+        shop: getInfoData(newShop, ["_id", "name", "email"]),
+        tokens: tokenPair,
       };
     }
   };

@@ -3,7 +3,7 @@ Content-Type: application/json
 x-api-key: 'xxxxxx'
 
 {
-    "name": "Shop 10",
-    "email": "shop10@test.com",
+    "name": "Shop 16",
+    "email": "shop16@test.com",
     "password": "password123"
 }
