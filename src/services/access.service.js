@@ -2,14 +2,72 @@ const shopModel = require("../models/shop.model");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const KeyTokenService = require("./keyToken.service");
-const { createTokenPair } = require("../auth/authUtils");
+const { createTokenPair, verifyJWT } = require("../auth/authUtils");
 const { getInfoData, createPublicPrivateKey } = require("../utils");
 const {
   BadRequestError,
   InternalServerError,
+  ForbiddenError,
 } = require("../core/error.response");
+const { findByEmail } = require("./shop.service");
 
-class ShopService {
+class AccessService {
+  static handleRefreshToken = async (refreshToken) => {
+    // Check if the refresh token has been used before
+    const foundToken = await KeyTokenService.findByRefreshTokenUsed(
+      refreshToken
+    );
+
+    // If found, it indicates potential token reuse
+    if (foundToken) {
+      const { userId, mail } = await verifyJWT(
+        refreshToken,
+        foundToken.publicKey
+      );
+      console.log("Potential token reuse detected for user:", { userId, mail });
+
+      // Invalidate all tokens for this user
+      await KeyTokenService.deleteKeyById(userId);
+      throw new ForbiddenError(
+        "Refresh token has been reused. All sessions invalidated."
+      );
+    } else {
+      // Normal flow: check if the refresh token exists in the store
+      const holderToken = await KeyTokenService.findByRefreshToken(
+        refreshToken
+      );
+      if (!holderToken)
+        throw new UnauthorizedError("Refresh token not found in store");
+
+      const { userId, email } = await verifyJWT(
+        refreshToken,
+        holderToken.publicKey
+      );
+
+      // Verify user existence
+      const shop = findByEmail({ email });
+      if (!shop) throw new UnauthorizedError("Shop not found");
+
+      // Generate new token pair
+      const tokenPair = await createTokenPair(
+        { userId, email },
+        holderToken.publicKey,
+        holderToken.privateKey
+      );
+
+      // Update the key store with the new refresh token and mark the old one as used
+      holderToken.refreshToken = tokenPair.refreshToken;
+      holderToken.usedRefreshTokens.push(refreshToken);
+      await holderToken.save();
+
+      return {
+        user: { userId, email },
+        tokens: tokenPair,
+      };
+    }
+  };
+
+  // Create new token pair
   static logout = async (keyStore) => {
     console.log("Key store to logout:", keyStore);
     const delKey = await KeyTokenService.removeKeyById(keyStore._id);
@@ -99,4 +157,4 @@ class ShopService {
   };
 }
 
-module.exports = ShopService;
+module.exports = AccessService;

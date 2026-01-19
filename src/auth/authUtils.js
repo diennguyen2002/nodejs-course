@@ -57,8 +57,6 @@ const authentication = asyncHandler(async (req, res, next) => {
     if (userId !== decodeUser.userId)
       throw new UnauthorizedError("Invalid request! User ID mismatch");
 
-    console.log("keyStore------:", keyStore);
-
     req.keyStore = keyStore;
     req.user = decodeUser;
     return next();
@@ -67,7 +65,12 @@ const authentication = asyncHandler(async (req, res, next) => {
   }
 });
 
+const verifyJWT = async (token, keySecret) => {
+  return JWT.verify(token, keySecret);
+};
+
 module.exports = {
   createTokenPair,
   authentication,
+  verifyJWT,
 };
