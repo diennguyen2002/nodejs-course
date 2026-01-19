@@ -1,10 +1,10 @@
 POST http://localhost:3000/api/v1/shop/register
 Content-Type: application/json
-x-api-key: 'xxxxxx'
+x-api-key: "xxxxxx"
 
 {
     "name": "Shop 1",
-    "email": "shop9@test.com",
+    "email": "shop1@test.com",
     "password": "password123"
 }
 
@@ -12,9 +12,19 @@ x-api-key: 'xxxxxx'
 
 POST http://localhost:3000/api/v1/shop/login
 Content-Type: application/json
-x-api-key: 'xxxxxx'
+x-api-key: "xxxxxx"
 
 {
-    "email": "shop9@test.com",
+    "email": "shop1@test.com",
     "password": "password123"
 }
+
+###
+
+POST http://localhost:3000/api/v1/shop/logout
+Content-Type: application/json
+x-api-key: xxxxxx
+x-client-id: 696d9f0e016570060e1351f5
+authorization: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTZkOWYwZTAxNjU3MDA2MGUxMzUxZjUiLCJlbWFpbCI6InNob3AxQHRlc3QuY29tIiwiaWF0IjoxNzY4Nzk0NTQwLCJleHAiOjE3Njg5NjczNDB9.lHmeebxkRRi5xKyvqX1KkEokdH9OEzYWG0I9Dl6w0nhEvt_KU7zTOes6MWh0nCOg_GtgUxlia0ATOlcb0JgxUdfmjeWIdaxlCsPJ2KsRsFnClalAr3mA9GtswdN9DBazKJwf3vr0d_RIcmZLrYb9671EFnaVM23OENCCrUpuUyNptOn104GvS7p2aCiPuSzZvvensvtoxMiI_cgSe5BIYeCt6xLS3gWzSlT1kuvMChpzu0w383Vtz37ruGyUX9KrzPMuoVoWCg9GnUMAjUD7QfoB2tvnNV7UJ2qs0lFQTqBOrIy_ErYlBUy-bt7bgcKcsZDlmclJF3JQh1cEO5DGwquCgDuhAtNNF-UV_lsAo_Fp5MpfmFfZb4w5AwJH_EzHO8sfubqAJrapye1Is0KkK4iknrwGFAmvFFWwrH0NVjy04AHZDYTjE31e9S3mYJTkngou46IbzwSljv4IKtrLDuZIyGobBtR-YZpAxPWBsuuoSftNdg3K91rqAxsRVNY6AkSPXVfXi0HaMcPE09dTVsl9orU5w4a0hIXpJWZChuiybijzto8iUIVzoLlg0jJe_1NZtLon4u-g5X67pWDdowRG1XWeig_82Fsrjczi9zHVJKEmIANrhM-oH68m_nnlLqvY-suKlS2oNt7v5itG7odF6DW-WWv0sg_BO58g68g
+
+{}

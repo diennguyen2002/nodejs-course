@@ -1,9 +1,10 @@
 const keyTokenModel = require("../models/keyToken.model");
+const { Types } = require("mongoose");
 
 class KeyTokenService {
   // Service methods will be implemented here
   static createKeyToken = async ({
-    shopId,
+    userId,
     publicKey,
     privateKey,
     refreshToken,
@@ -12,7 +13,7 @@ class KeyTokenService {
     try {
       // Nếu chưa có thì tạo mới, có rồi thì update
       const tokens = await keyTokenModel.findOneAndUpdate(
-        { user: shopId },
+        { user: userId },
         { publicKey, privateKey, usedRefreshTokens: [], refreshToken },
         { upsert: true, new: true }
       );
@@ -20,6 +21,14 @@ class KeyTokenService {
     } catch (error) {
       return { error };
     }
+  };
+
+  static findByUserId = async (userId) => {
+    return await keyTokenModel.findOne({ user: userId }).lean();
+  };
+
+  static removeKeyById = async (id) => {
+    return await keyTokenModel.deleteOne({ _id: id });
   };
 }
 

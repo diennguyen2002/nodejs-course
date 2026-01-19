@@ -3,13 +3,19 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const KeyTokenService = require("./keyToken.service");
 const { createTokenPair } = require("../auth/authUtils");
-const { getInfoData } = require("../utils");
+const { getInfoData, createPublicPrivateKey } = require("../utils");
 const {
   BadRequestError,
   InternalServerError,
 } = require("../core/error.response");
 
 class ShopService {
+  static logout = async (keyStore) => {
+    console.log("Key store to logout:", keyStore);
+    const delKey = await KeyTokenService.removeKeyById(keyStore._id);
+    return delKey;
+  };
+
   static login = async ({ email, password, refreshToken = null }) => {
     const existedShop = await shopModel.findOne({ email }).lean();
     if (!existedShop) {
@@ -21,17 +27,16 @@ class ShopService {
       throw new BadRequestError("Bad request");
     }
 
-    const privateKey = crypto.randomBytes(64).toString("hex");
-    const publicKey = crypto.randomBytes(64).toString("hex");
+    const { publicKey, privateKey } = createPublicPrivateKey();
 
     const tokenPair = await createTokenPair(
-      { shopId: existedShop._id, email },
+      { userId: existedShop._id, email },
       publicKey,
       privateKey
     );
 
     await KeyTokenService.createKeyToken({
-      shopId: existedShop._id,
+      userId: existedShop._id,
       publicKey,
       privateKey,
       refreshToken: tokenPair.refreshToken,
@@ -60,14 +65,13 @@ class ShopService {
     });
 
     if (newShop) {
-      const privateKey = crypto.randomBytes(64).toString("hex");
-      const publicKey = crypto.randomBytes(64).toString("hex");
+      const { publicKey, privateKey } = createPublicPrivateKey();
 
       console.log("Generated Public Key:", publicKey);
       console.log("Generated Private Key:", privateKey);
 
       const tokenPair = await createTokenPair(
-        { shopId: newShop._id, email },
+        { userId: newShop._id, email },
         publicKey,
         privateKey
       );
@@ -75,7 +79,7 @@ class ShopService {
       console.log("Token Pair:", tokenPair);
 
       const publicKeyString = await KeyTokenService.createKeyToken({
-        shopId: newShop._id,
+        userId: newShop._id,
         publicKey,
         privateKey,
         refreshToken: tokenPair.refreshToken,
